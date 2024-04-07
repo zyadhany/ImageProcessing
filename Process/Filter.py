@@ -1,0 +1,4 @@
+
+def grayscale():
+    pass
+
