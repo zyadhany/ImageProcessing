@@ -32,6 +32,21 @@ class EditWindow():
         self.layers = [self.defult_layer]
         self.render()
 
+    def editImage(self, img, x=0, y=0):
+        self.getCurLayer().addImage(img, x, y)
+
+    def addFilter(self, filt):
+        self.getCurLayer().Filter = filt
+
+    def changePotion(self, x=None, y=None):
+        if x is not None:
+            self.getCurLayer().x = x
+        if y is not None:
+            self.getCurLayer().y = y
+
+    def getCurLayer(self):
+        return self.layers[self.current_layer]
+
     def switch_layer(self, layer_index):
         """ Switches the currently active layer. """
         if 0 <= layer_index < len(self.layers):
@@ -80,10 +95,10 @@ class EditWindow():
         """ Loads an image from a file. """
         layer = Layer(img=img)
         self.layers.append(layer)
-        self.render()
 
     def show(self):
         """ view the final image. """
+        self.render()
         cv2.imshow('Edit Window', self.image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
