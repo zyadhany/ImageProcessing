@@ -1,9 +1,7 @@
 import tkinter as tk
+from tkinter import *
 from GUI import MainRoot, data
 
-def add(x):
-    x = 5
-    return x
 
 def main():
     root = tk.Tk()

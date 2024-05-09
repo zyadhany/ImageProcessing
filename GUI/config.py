@@ -17,15 +17,16 @@ def rootConfig(root:tk.Tk):
     
     # name and icon
     root.title("Photoshop")
-    #root.iconbitmap(getPath("resource/icon.ico"))
+    root.iconbitmap("resource/icon.ico")
 
     # size
     root.config(width=data.window_width, height=data.window_height)
-    print(data.window_height)
     root.maxsize(data.window_width, data.window_height)
     root.minsize(685,384)
 
+    root.config(bg='#171435')
     root.attributes('-fullscreen', False)
+    root.wm_state('zoomed')
     root.bind("<F11>", lambda event:toggle_fullscreen(root))
     root.bind("<Escape>", lambda event:root.quit())
 
