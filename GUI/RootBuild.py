@@ -2,6 +2,7 @@ from tkinter import Frame, Menu
 import tkinter as tk
 from .config import rootConfig, frameConfig
 from .MenuBar import MakeMenu
+from
 
 def MainRoot(root:tk.Tk):
     # configure proprites of the root
@@ -13,4 +14,7 @@ def MainRoot(root:tk.Tk):
     # Menu Bar confiig
     MakeMenu(root)
     
+    # edit window congit
+    EditWindow()
+
     return (root)
