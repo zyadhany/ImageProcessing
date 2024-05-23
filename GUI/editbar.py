@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import Frame
-from .. import data
+import data
 import os
 
 def MainEditBar(root):

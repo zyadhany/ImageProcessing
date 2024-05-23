@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import Frame
 import os
-from .. import data
+import data
 from PIL import Image, ImageTk  # Import Image and ImageTk from PIL
 
 def MainContent(root):
@@ -12,7 +12,8 @@ def MainContent(root):
     # Create the edit frame
     center_x = root.winfo_reqwidth() // 2
     center_y = root.winfo_reqheight() // 2
-    edit = Frame(content, width=center_x, height=center_y, bg='white')
+    edit = Frame(content, bg='white')
+    edit.config(width=center_x, height=center_y)
     edit.place(relx=0.5, rely=0.45, anchor='center')
     edit.pack_propagate(False)
     data.EDIT_FRAME = edit

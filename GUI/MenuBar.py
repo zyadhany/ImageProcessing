@@ -1,5 +1,10 @@
 from tkinter import Frame, Menu
 import tkinter as tk
+import data
+
+def req():
+    data.EDIT_WINDOW.load_image_fromfile('tmp/lenna.png')
+    data.EDIT_WINDOW.show()
 
 def MakeMenu(root):
         # menu اللي ف اعلي شاشه
@@ -8,7 +13,7 @@ def MakeMenu(root):
     # File in menubar
     filemenu=Menu(bar,tearoff=0)
     bar.add_cascade(label='File', menu=filemenu)
-    filemenu.add_command(label='New')
+    filemenu.add_command(label='New', command=req)
     filemenu.add_command(label='Open ')
     filemenu.add_command(label='Save ')
     filemenu.add_command(label='Save AS ')

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import Frame
 from .content import MainContent
 from .editbar import MainEditBar
-from .. import data
+import data
 import os
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
