@@ -4,6 +4,7 @@ from tkinter import Tk
 from PIL import Image, ImageTk
 import numpy as np
 from .Layer import Layer
+import copy
 
 class EditWindow():
     """
@@ -18,7 +19,9 @@ class EditWindow():
         image (img): final image after compine all layers.
     """
 
-    def __init__(self, width=720, height=520, tk_frame:Tk=None, fileload=None, defult_layer=None):
+    count_name = 1
+
+    def __init__(self, width=720, height=520, tk_frame:Tk=None, fileload=None, default_layer=None):
         """ Initializes an EditWindow object. """
         if fileload:
             self.file_load(fileload)
@@ -33,11 +36,13 @@ class EditWindow():
             self.height = height
     
         self.current_layer = 0
-        if defult_layer:
-            self.defult_layer = defult_layer
+        if default_layer:
+            self.default_layer = default_layer
         else:
-            self.defult_layer = Layer(self.width, self.height)
-        self.layers = [self.defult_layer]
+            self.default_layer = Layer(self.width, self.height)
+        self.layers = []
+        self.add_layer()
+        self.switch_layer(0)
         self.render()
 
     def editImage(self, img, x=0, y=0):
@@ -55,32 +60,53 @@ class EditWindow():
     def getCurLayer(self):
         return self.layers[self.current_layer]
 
+    def swap_layers(self, lef, rig):
+        if lef < 0 or lef >= len(self.layers):
+            return
+        if rig < 0 or rig >= len(self.layers):
+            return
+        if lef == rig:
+            return
+        self.layers[lef], self.layers[rig] = self.layers[rig], self.layers[lef]
+        if lef == self.current_layer:
+            self.switch_layer(rig)
+        elif rig == self.current_layer:
+            self.switch_layer(lef)
+    
     def switch_layer(self, layer_index):
         """ Switches the currently active layer. """
+        self.layers[self.current_layer].current = 0
         if 0 <= layer_index < len(self.layers):
             self.current_layer = layer_index
-    
-    def add_layer(self):
+        self.layers[self.current_layer].current = 1
+
+    def add_layer(self, ly=None):
         """ add layer to window"""
-        self.layers.append(self.defult_layer)
+        if ly is None:
+            ly = copy.deepcopy(self.default_layer)
+            ly.name = f"Layer {self.count_name}"
+            self.count_name += 1
+        self.layers.append(ly)
         self.render()
         pass
 
     def remove_layer(self, index):
         """ remove layer to window"""
-        if len(self.layers) == 1:
+        if len(self.layers) == 1 or index >= len(self.layers):
             # print error massage
             return
-        if index < self.current_layer:
-            self.current_layer -= 1
-        elif index == self.current_layer and index == len(self.layers):
-            self.current_layer -= 1
-        del self.layers[self.current_layer]
+
+        if index <= self.current_layer:
+            self.switch_layer(self.current_layer - 1)
+        elif index == self.current_layer and index == len(self.layers) - 1:
+            self.switch_layer(self.current_layer - 1)
+        del self.layers[index]
+        self.switch_layer(self.current_layer)
         self.render()
 
     def render(self):
         """ Combine all layers into one image. """
-        result = self.defult_layer.image
+        result = copy.deepcopy(self.default_layer.image)
 
         for layer in self.layers:
             # Determine the bounding box to copy the layer onto the result image

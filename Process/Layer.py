@@ -1,5 +1,8 @@
 import cv2
 import numpy as np
+import tkinter as tk
+from PIL import Image, ImageTk 
+import data
 
 class Layer:
     """
@@ -12,6 +15,8 @@ class Layer:
         image (numpy.ndarray): The image data for the layer.
     """
 
+    current = 0
+    name = "None"
 
     def __init__(self, width=0, height=0, img=None):
         """ Initialize a Layer object. """

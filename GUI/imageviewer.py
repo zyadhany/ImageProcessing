@@ -35,7 +35,6 @@ class EditViewApp(tk.Frame):
         self.canvas.bind("<MouseWheel>", self.mouse_wheel)                     # MouseWheel
 
     def mouse_down_left(self, event):
-        print(event)
         self.__old_event = event
 
     def mouse_move_left(self, event):
@@ -54,7 +53,7 @@ class EditViewApp(tk.Frame):
     def mouse_wheel(self, event):
         if self.pil_image is None:
             return
-        if event.delta < 0:
+        if event.delta > 0:
             self.scale_at(1.25, event.x, event.y)
         else:
             self.scale_at(0.8, event.x, event.y)
@@ -98,6 +97,10 @@ class EditViewApp(tk.Frame):
             offsety = (canvas_height - image_height * scale) / 2
         self.scale(scale)
         self.translate(offsetx, offsety)
+
+    def make_fit(self):
+        self.zoom_fit(self.pil_image.width, self.pil_image.height)
+        self.redraw_image()
 
     def draw_image(self, pil_image):
         if pil_image is None:

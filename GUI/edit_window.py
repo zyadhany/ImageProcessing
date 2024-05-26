@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import Frame
 from Process import EditWindow
-from .content import edit_frame
+from .content import edit_frame, scrollEdit
 from .imageviewer import EditViewApp
 import data
 import os
@@ -12,6 +12,7 @@ def render_edit():
     edt.render()
     view.convert_img(edt.image)
     view.redraw_image()
+    scrollEdit()
 
 def EditWindow_config(edt:EditWindow=None, width=720, height=560):
     if edt is None:

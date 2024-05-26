@@ -8,20 +8,11 @@ import data
 import threading
 import subprocess
 
-def req():
-    data.EDIT_WINDOW.load_image_fromfile('tmp/lenna.png')
-    data.EDIT_WINDOW.render()
-    image = Image.fromarray(data.EDIT_WINDOW.image)
-    photo = ImageTk.PhotoImage(image)
-    label = tk.Label(data.EDIT_FRAME, image=photo)
-    label.image = photo
-    label.pack()
-    cv2.imshow('w', data.EDIT_WINDOW.image)
+def after_render():
+    from GUI.edit_window import render_edit
+    data.EDIT_VIEW_APP.make_fit()
+    render_edit()
 
-    return
-    #data.EDIT_WINDOW.tk_frame = None
-    data.EDIT_WINDOW.show()
-    data.EDIT_WINDOW.show()
 
 def main():
     root = tk.Tk()
@@ -29,7 +20,7 @@ def main():
     data.window_width = root.winfo_screenwidth()
     data.window_height = root.winfo_screenheight()
     MainRoot(root)
-    #req()
+    root.after(10, after_render)
     root.mainloop()
 
     

@@ -4,6 +4,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Toplevel
 from tkinter import simpledialog
 from Process import EditWindow
 from ..edit_window import EditWindow_config
+import data
 
 WINDOW = None
 ROOT = None
@@ -13,9 +14,9 @@ def close_modal(modal, root):
     modal.destroy()
 
 def create_model(model, root, width, height):
-    print(width, height)
     edt = EditWindow(width=int(width), height=int(height))
     EditWindow_config(edt)
+    data.EDIT_VIEW_APP.make_fit()
     close_modal(model, root)
 
 def new_frame(parent: tk.Tk):
