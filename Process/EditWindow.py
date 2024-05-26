@@ -117,7 +117,8 @@ class EditWindow():
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         else:
-            image = Image.fromarray(self.image)
+            image = Image.fromarray(self.image[..., ::-1])
+            #image.show()
             photo = ImageTk.PhotoImage(image)
             label = tk.Label(self.tk_frame, image=photo)
             label.image = photo

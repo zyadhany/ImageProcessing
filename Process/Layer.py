@@ -21,7 +21,7 @@ class Layer:
         else:
             self.width = width
             self.height = height
-            self._image = np.ones((height, width, 3), np.uint8) * 17
+            self._image = np.ones((height, width, 3), np.uint8) * 255
         self.Filter = None
         self.x = 0
         self.y = 0
@@ -30,23 +30,19 @@ class Layer:
         if self.image is None:
             self.image = img
         else:
-            print("||", x, y)
-            # Calculate the region of intersection
             x_start = min(self.x, x)
             y_start = min(self.y, y)
             x_end = max(self.x + self.image.shape[1], x + img.shape[1])
             y_end = max(self.y + self.image.shape[0], y + img.shape[0])
 
-            
             self.x = x_start
             self.y = y_start
-
 
     @property
     def image(self):
         if self.Filter is None:
             return self._image
-        return self.Filter(self._image)
+        return self.Filter.apply_filter(self._image)
     
     @image.setter
     def image(self, val):

@@ -1,22 +1,58 @@
-from tkinter import Frame, Menu
+from tkinter import Frame, Menu, filedialog
 import tkinter as tk
+from Process import file_load, save_as
+from .edit_window import EditWindow_config, render_edit
+from .pages import new_frame
 import data
+from .content import edit_frame
 
-def req():
-    data.EDIT_WINDOW.load_image_fromfile('tmp/lenna.png')
-    data.EDIT_WINDOW.show()
+def get_file_path():
+    try:
+        file = filedialog.askopenfilename(title="chose folder")
+    except FileNotFoundError:
+        return None
+    return file
+
+def load_edit_file():
+    path = get_file_path()
+    edt = file_load(path)
+    edit_frame(edt.width, edt.height)
+    EditWindow_config(edt)
+
+def open_image_from_file():
+    path = get_file_path()
+    data.EDIT_WINDOW.load_image_fromfile(path)
+    render_edit()
+    
+def menu_save():
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".txt",
+        filetypes=[("imaged", "*.png *.jpg *.jpeg"), ("All files", "*.*")]
+    )
+    data.EDIT_WINDOW.save_image(file_path)    
+
+def menu_save_as():
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".txt",
+        filetypes=[("editfile", "*.zh"), ("All files", "*.*")]
+    )
+    tk_tmp = data.EDIT_WINDOW.tk_frame
+    data.EDIT_WINDOW.tk_frame = None
+    save_as(data.EDIT_WINDOW, file_path)
+    data.EDIT_WINDOW.tk_frame = tk_tmp
+
 
 def MakeMenu(root):
-        # menu اللي ف اعلي شاشه
     bar=Menu(root)
     root.config(menu=bar)
     # File in menubar
     filemenu=Menu(bar,tearoff=0)
     bar.add_cascade(label='File', menu=filemenu)
-    filemenu.add_command(label='New', command=req)
-    filemenu.add_command(label='Open ')
-    filemenu.add_command(label='Save ')
-    filemenu.add_command(label='Save AS ')
+    filemenu.add_command(label='New', command=lambda: new_frame(data.ROOT))
+    filemenu.add_command(label='Load ', command=load_edit_file)
+    filemenu.add_command(label='Open ', command=open_image_from_file)
+    filemenu.add_command(label='Save ', command=menu_save)
+    filemenu.add_command(label='Save AS ', command=menu_save_as)
     filemenu.add_separator()
     filemenu.add_command(label='Print')
     filemenu.add_command(label='Close')

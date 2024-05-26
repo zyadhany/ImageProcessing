@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import Frame
 from PIL import Image, ImageTk
 import numpy as np
 import cv2

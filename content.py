@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import Frame
 import os
-from . import data
+import data
 
 def MainContent(root):
     content = Frame(root, width=data.window_width,height=0.9*data.window_height,bg='red')
