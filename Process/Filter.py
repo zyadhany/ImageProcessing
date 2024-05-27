@@ -1,10 +1,19 @@
 import cv2
 import numpy as np
+import data
+from PIL import Image, ImageTk
+
 
 class Filter():
 
     def __init__(self):
+        self.image =  cv2.imread('resource/lenna.png')
+        self.image = self.apply_filter(self.image)
+        self.pil_img = Image.fromarray(cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB))
+        self.tk_img = ImageTk.PhotoImage(self.pil_img)
         pass
+
+    
 
     def apply_filter(self, img):
         return img
@@ -43,3 +52,9 @@ class Sobel(Filter):
 
         return gradient_mag_color
 
+
+FILTERS = {'NONE':Filter, 'grayscale':grayscale,
+                'Gaussian_Blur':Gaussian_Blur, 'Sobel':Sobel}
+
+for key, val in FILTERS.items():
+    val.name = key

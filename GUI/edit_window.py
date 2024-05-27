@@ -6,12 +6,15 @@ from .imageviewer import EditViewApp
 import data
 import os
 
-def render_edit():
+def render_window():
     view:EditViewApp = data.EDIT_VIEW_APP
     edt:EditWindow = data.EDIT_WINDOW    
     edt.render()
     view.convert_img(edt.image)
     view.redraw_image()
+
+def render_edit():
+    render_window()
     scrollEdit()
 
 def EditWindow_config(edt:EditWindow=None, width=720, height=560):

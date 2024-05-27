@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 import math                    
 import numpy as np             
 import os                      
+import data
+
 
 class EditViewApp(tk.Frame):
     def __init__(self, master=None):
@@ -17,8 +19,29 @@ class EditViewApp(tk.Frame):
         if not filename:
             return
         self.pil_image = Image.open(filename)
+        self.width = self.pil_image.width
+        self.height = self.pil_image.height
         self.zoom_fit(self.pil_image.width, self.pil_image.height)
         self.draw_image(self.pil_image)
+
+    def draw_layer(self, x, y, color, size):
+        lx = self.mat_affine[0][2]
+        rx = lx + self.width * self.mat_affine[0][0]
+        ly = self.mat_affine[1][2]
+        ry = ly + self.height * self.mat_affine[1][1]
+
+        if x < lx or x > rx or y < ly or y > ry:
+            return
+        
+        x -= lx
+        x *= 1 / self.mat_affine[0][0]
+        
+        y -= ly
+        y *= 1 / self.mat_affine[1][1]
+
+        data.EDIT_WINDOW.draw_circ(int(x), int(y), color, size)
+        from .edit_window import render_window
+        render_window()
 
     def create_widget(self):
         # Canvas
@@ -40,9 +63,19 @@ class EditViewApp(tk.Frame):
     def mouse_move_left(self, event):
         if self.pil_image is None:
             return
-        self.translate(event.x - self.__old_event.x, event.y - self.__old_event.y)
-        self.redraw_image()
-        self.__old_event = event
+        
+        if data.MODE == 'Hand':
+            self.translate(event.x - self.__old_event.x, event.y - self.__old_event.y)
+            self.redraw_image()
+            self.__old_event = event
+            return
+        
+        size = 5
+        color = data.PEN_COLOR
+
+        self.draw_layer(event.x, event.y, color=color, size=size)
+        
+
 
     def mouse_double_click_left(self, event):
         if self.pil_image is None:
@@ -67,6 +100,7 @@ class EditViewApp(tk.Frame):
         mat[0, 2] = float(offset_x)
         mat[1, 2] = float(offset_y)
         self.mat_affine = np.dot(mat, self.mat_affine)
+        
 
     def scale(self, scale: float):
         mat = np.eye(3)
@@ -112,7 +146,6 @@ class EditViewApp(tk.Frame):
         canvas_height = self.canvas.winfo_height()
 
         mat_inv = np.linalg.inv(self.mat_affine)
-
         affine_inv = (
             mat_inv[0, 0], mat_inv[0, 1], mat_inv[0, 2],
             mat_inv[1, 0], mat_inv[1, 1], mat_inv[1, 2]
@@ -122,7 +155,8 @@ class EditViewApp(tk.Frame):
             (canvas_width, canvas_height),
             Image.AFFINE,
             affine_inv,
-            Image.NEAREST
+            Image.NEAREST,
+            fillcolor='#212529'
         )
         im = ImageTk.PhotoImage(image=dst)
 #        pil_image.show()
@@ -141,4 +175,6 @@ class EditViewApp(tk.Frame):
     
     def convert_img(self, img):
         self.pil_image = Image.fromarray(img[..., ::-1])
+        self.width = self.pil_image.width
+        self.height = self.pil_image.height
         #self.pil_image = ImageTk.PhotoImage(image)

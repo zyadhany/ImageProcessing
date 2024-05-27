@@ -13,7 +13,12 @@ EDIT_VIEW_APP = None
 LAYER_FRAME:Frame = None
 SCROLL_LAYER_FRAME:Frame = None
 LAYER_SCROLLER = None
+FILTERS:dict = None
 
 # Colors
-EDIT_BG_COLOR = '#465362'
-CONTENT_BG_COLOR = '#8AA39B'
+PEN_COLOR:str = 'Black'
+EDIT_BG_COLOR = '#343a40'
+CONTENT_BG_COLOR = '#6c757d'
+
+#edit
+MODE = 'Hand'

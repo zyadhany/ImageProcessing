@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
 import tkinter as tk
+from .Filter import FILTERS
 from PIL import Image, ImageTk 
 import data
+import re
 
 class Layer:
     """
@@ -31,6 +33,36 @@ class Layer:
         self.x = 0
         self.y = 0
 
+    def get_bgr_color(self, color):
+        if re.match(r'^#[0-9A-Fa-f]{6}$', color):
+            hex_color = color.lstrip('#')
+            r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            return (b, g, r) 
+        else:
+            color_map = {
+                'red': (0, 0, 255),
+                'green': (0, 255, 0),
+                'blue': (255, 0, 0),
+                'white': (255, 255, 255),
+                'black': (0, 0, 0),
+                'yellow': (0, 255, 255),
+                'purple': (128, 0, 128),
+            }
+
+            return color_map.get(color.lower(), (0, 0, 0))
+
+    def draw_circ(self, x, y, color, size):
+        color_bgr = self.get_bgr_color(color)
+
+        if not isinstance(x, int) or not isinstance(y, int):
+            raise ValueError("Coordinates must be integers.")
+
+        if not isinstance(size, int) or size <= 0:
+            raise ValueError("Size must be a positive integer.")
+
+        cv2.circle(self._image, (x, y), size, color_bgr, -1)  # -1 fills the circle
+
+
     def addImage(self, img, x, y):
         if self.image is None:
             self.image = img
@@ -47,7 +79,7 @@ class Layer:
     def image(self):
         if self.Filter is None:
             return self._image
-        return self.Filter.apply_filter(self._image)
+        return FILTERS[self.Filter].apply_filter(None, img=self._image)
     
     @image.setter
     def image(self, val):

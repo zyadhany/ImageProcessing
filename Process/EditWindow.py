@@ -60,6 +60,9 @@ class EditWindow():
     def getCurLayer(self):
         return self.layers[self.current_layer]
 
+    def draw_circ(self, x, y, color, size):
+        self.getCurLayer().draw_circ(x, y, color, size)
+
     def swap_layers(self, lef, rig):
         if lef < 0 or lef >= len(self.layers):
             return

@@ -21,8 +21,13 @@ def load_edit_file():
 
 def open_image_from_file():
     path = get_file_path()
-    data.EDIT_WINDOW.load_image_fromfile(path)
-    render_edit()
+    if path == '':
+        return
+    try:
+        data.EDIT_WINDOW.load_image_fromfile(path)
+        render_edit()
+    except Exception as e:
+        print(f"An error occurred while opening the image: {e}")
     
 def menu_save():
     file_path = filedialog.asksaveasfilename(
@@ -37,9 +42,17 @@ def menu_save_as():
         filetypes=[("editfile", "*.zh"), ("All files", "*.*")]
     )
     tk_tmp = data.EDIT_WINDOW.tk_frame
+
     data.EDIT_WINDOW.tk_frame = None
+
+
+    for ly in data.EDIT_WINDOW.layers:
+        ly.tk_images = None
+
     save_as(data.EDIT_WINDOW, file_path)
+    
     data.EDIT_WINDOW.tk_frame = tk_tmp
+    render_edit()
 
 
 def MakeMenu(root):

@@ -35,10 +35,12 @@ def create_frame(self, parent, index):
         canvas.pack(side="left", fill="both", expand=True)
         canvas.bind("<Button-1>", lambda event, index=index: convert_layer(index=index))   
 
-        self.button_image_1 = PhotoImage(file='resource/assest/button_1_lyr.png')
+        self.tk_images = []
+
+        self.tk_images.append(PhotoImage(file='resource/assest/button_1_lyr.png'))
         button_1 = Button(
             frame,
-            image=self.button_image_1,
+            image=self.tk_images[0],
             borderwidth=0,
             highlightthickness=0,
             command=lambda: delete_Layer(index=index),
@@ -60,19 +62,19 @@ def create_frame(self, parent, index):
         )
 
         pil_image_1 = Image.fromarray(self.image[..., ::-1]).resize((50, 50))
-        self.image_1 = ImageTk.PhotoImage(pil_image_1)
+        self.tk_images.append(ImageTk.PhotoImage(pil_image_1))
         image_1 = canvas.create_image(
             36.669189453125,
             36.0,
-            image=self.image_1
+            image=self.tk_images[1]
         )
 
         pil_image_1 = Image.fromarray(self.image[..., ::-1]).resize((20, 20))
-        self.image_2 = ImageTk.PhotoImage(pil_image_1)
+        self.tk_images.append(ImageTk.PhotoImage(pil_image_1))
         image_2 = canvas.create_image(
             230.0,
             36.0,
-            image=self.image_2
+            image=self.tk_images[2]
         )
 
         canvas.create_text(
@@ -140,7 +142,7 @@ def layer_bar():
     down_button.pack(side='left', padx=10, pady=10)
     
 def edit_frame(width=720, height=720):
-    width = 720
+    width = 1366
     height = 720
     if width is 0:
         width = data.ROOT.winfo_reqwidth() // 2
@@ -153,7 +155,7 @@ def edit_frame(width=720, height=720):
     edit = Frame(data.CONTENT_WINDOW, bg='white')
     edit.config(bd=1, relief='raised')
     edit.config(width=width, height=height)
-    edit.place(relx=0.5, rely=0.45, anchor='center')
+    edit.place(relx=0.3934, rely=0.5, anchor='center')
     edit.pack_propagate(False)
     view = EditViewApp(edit)
     view.pack(expand=True, fill=tk.BOTH)
@@ -162,7 +164,7 @@ def edit_frame(width=720, height=720):
     data.EDIT_VIEW_APP = view
 
 def MainContent(root):
-    content = Frame(root, width=data.window_width,height=0.9*data.window_height, bg=data.CONTENT_BG_COLOR)
+    content = Frame(root, width=data.window_width,height=0.85*data.window_height, bg=data.CONTENT_BG_COLOR)
     content.pack_propagate(False)
     data.CONTENT_WINDOW = content
 
